@@ -31,6 +31,49 @@ app.use(function (req, res, next) {
   );
   next();
 });
+async function insertMongo(data, collection) {
+    const client = new MongoClient(uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+  
+    try {
+      await client.connect();
+      const database = client.db("find-my-pet");
+      const col = database.collection(collection);
+      const result = await col.insertOne(data);
+      console.log(`A post was inserted with the _id: ${result.insertedId}`);
+    } finally {
+      await client.close();
+    }
+  }
+async function check_user(user){
+    const client = new MongoClient(uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    });
+
+    var is_already = false
+
+    try{
+        await client.connect();
+        const database = client.db("find-my-pet")
+        const col = database.collection("accounts")
+        results = await displayPosts("accounts","","")
+        results.forEach(element => {
+            if(element.email == user.email){
+                is_already = true
+            }
+        });
+
+        if(is_already == true){
+            return 0
+        }
+
+    }finally{
+        await client.close();
+    }
+}
 
 async function displayPosts(collection, query, options) {
   const client = new MongoClient(uri, {
@@ -130,23 +173,6 @@ app.post('/review',(req,res) =>{
 })
 
 
-async function insertMongo(data, collection) {
-  const client = new MongoClient(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-
-  try {
-    await client.connect();
-    const database = client.db("find-my-pet");
-    const col = database.collection(collection);
-    const result = await col.insertOne(data);
-    console.log(`A post was inserted with the _id: ${result.insertedId}`);
-  } finally {
-    await client.close();
-  }
-}
-
 app.get("/display_posts_lost", async (req, res) => {
   const optiones = {};
   const result = await displayPosts("lost_posts", "", optiones);
@@ -158,6 +184,25 @@ app.get("/display_posts_found", async (req, res) => {
   const result = await displayPosts("found_posts", "", optiones);
   res.json(result);
 });
+
+app.post("/login", async(req,res) =>{
+    const email = req.user.email
+    const photo_url = req.user.picture
+    const username = req.user.user
+
+    user = {
+        email,
+        photo_url,
+        username,
+    }
+
+    result = await check_user(email)
+    if(result != 0){
+        insertMongo(user,"accounts")
+    }
+    res.send("yip")
+})
+
 
 app.listen(port, () => {
   console.log("working at", port);
