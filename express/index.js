@@ -59,6 +59,8 @@ app.post('/lost_post',(req, res) => {
     const lan = req.body.lan
     const lng = req.body.lng
     const account_id = req.body.accound_id
+    const pet_type = req.body.pet_type
+    const pet_breed = req.body.pet_breed
 
     const lost_post = {
         id_chip,
@@ -68,7 +70,9 @@ app.post('/lost_post',(req, res) => {
         pet_name,
         lan,
         lng,
-        account_id
+        account_id,
+        pet_type,
+        pet_breed
     }
     insertMongo(lost_post,"lost_posts")
     res.send(lost_post)
@@ -81,6 +85,8 @@ app.post('/found_post',(req,res) =>{
     const contact = req.body.contact
     const vet = req.body.vet
     const account_id = req.body.accound_id
+    const pet_type = req.body.pet_type
+    const pet_breed = req.body.pet_breed
 
     const found_post = {
         photo,
@@ -88,7 +94,9 @@ app.post('/found_post',(req,res) =>{
         lng,
         contact,
         vet,
-        account_id
+        account_id,
+        pet_type,
+        pet_breed
     }
     insertMongo(found_post,"found_posts")
     res.send(found_post)
