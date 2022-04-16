@@ -2,6 +2,7 @@ import React from "react";
 import style from "./SocialButton.module.scss";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../store/user";
+import axios from "axios";
 
 function SocialButton({ logo, text, action, setLogin }) {
   const dispatch = useDispatch();
@@ -19,6 +20,12 @@ function SocialButton({ logo, text, action, setLogin }) {
       );
 
       setLogin(false);
+
+      await axios.post("http://localhost:5050/login", {
+        user: user.displayName,
+        email: user.email,
+        picture: user.photoURL,
+      });
     }
   };
 

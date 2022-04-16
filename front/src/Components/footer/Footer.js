@@ -28,9 +28,7 @@ function Footer({ user, setPage, page }) {
           <img
             className={styles.footerImg}
             alt="add"
-            src={
-              page == "map" || page == "list" || page == "profile" ? add : map
-            }
+            src={page == "map" || page == "list" ? add : map}
           />
         </div>
         <div className={styles.footerButton}>

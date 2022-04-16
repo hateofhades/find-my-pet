@@ -18,13 +18,13 @@ function App() {
   console.log(user);
 
   return (
-    <div className="App">
+    <div className="App" style={{ height: "100%", width: "100%" }}>
       {showLogin && <LoginPopup setLogin={setLogin} />}
       <Header user={user} setLogin={setLogin} />
       {showPage === "map" && <Map />}
       {showPage === "add" && <AddPage />}
       {showPage === "list" && <ListPage />}
-      {showPage === "profile" && <ProfilePage />}
+      {showPage === "profile" && <ProfilePage user={user} />}
       {user && <Footer user={user} page={showPage} setPage={setPage} />}
     </div>
   );
