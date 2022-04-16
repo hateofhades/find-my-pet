@@ -1,6 +1,7 @@
 const express = require('express')
 var bodyParser = require('body-parser')
-const { MongoClient } = require('mongodb')
+const { MongoClient } = require('mongodb');
+const { options } = require('nodemon/lib/config');
 const uri = "mongodb+srv://sebastian:seb@cluster0.enpab.mongodb.net/cluster0?retryWrites=true&w=majority";
 
 const app = express()
@@ -11,14 +12,24 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json())
 
-async function displayPosts(collection){
+async function displayPosts(collection, query, options){
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true});
-    
+    var result = []
     try{
         await client.connect();
         const database = client.db("find-my-pet");
         const col = database.collection(collection)
-        const result = await col.find({}).toArray
+
+        const cursor = col.find(query, options)
+
+        if((await col.estimatedDocumentCount) == 0){
+            console.log("No items found")
+        }
+
+        await cursor.forEach((e) => {
+            result.push(e)
+        })
+        // console.log(result)
         return result
     }finally{
         await client.close()
@@ -39,55 +50,84 @@ async function insertMongo(data,collection){
       }
 }
 
-
-app.get('/',(req, res) =>{
-    res.send('Testing')
-})
-
 app.post('/lost_post',(req, res) => {
-    id_chip = req.body.id
-    lost_date = req.body.lost_date
-    description = req.body.description
-    photo = req.body.photo
-    pet_name = req.body.pet_name
-    location_x = req.body.lan
-    location_y = req.body.lng
+    const id_chip = req.body.id
+    const lost_date = req.body.lost_date
+    const description = req.body.description
+    const photo = req.body.photo
+    const pet_name = req.body.pet_name
+    const lan = req.body.lan
+    const lng = req.body.lng
+    const account_id = req.body.accound_id
 
     const lost_post = {
-        id_chip: id_chip,
-        lost_date:lost_date,
-        description:description,
-        photo:photo,
-        pet_name:pet_name,
-        lan : location_x,
-        lng : location_y,
+        id_chip,
+        lost_date,
+        description,
+        photo,
+        pet_name,
+        lan,
+        lng,
+        account_id
     }
     insertMongo(lost_post,"lost_posts")
     res.send(lost_post)
 })
 
 app.post('/found_post',(req,res) =>{
-    photo = req.body.photo
-    lan = req.body.lan
-    lng = req.body.lng
-    contact = req.body.contact
-    vet = req.body.vet
+    const photo = req.body.photo
+    const lan = req.body.lan
+    const lng = req.body.lng
+    const contact = req.body.contact
+    const vet = req.body.vet
+    const account_id = req.body.accound_id
 
     const found_post = {
-        photo: photo,
-        lan:lan,
-        lng:lng,
-        contact:contact,
-        vet:vet
+        photo,
+        lan,
+        lng,
+        contact,
+        vet,
+        account_id
     }
     insertMongo(found_post,"found_posts")
     res.send(found_post)
 })
 
-app.get("/display_posts",(res,req) =>{
+app.post('/review',(req,res) =>{
+    const id = req.body.account_id
+    const rating = req.body.rating
+    const post_id = req.body.post_id
+    const description = req.body.description
+    const account_id = req.body.accound_id
+
+    const review = {
+        id,
+        rating,
+        post_id,
+        description,
+        account_id
+    }
+    insertMongo(found_post,"review")
+    res.send(found_post)
 })
+
+app.get("/display_posts_lost",async (req,res) =>{
+    options = {
+    }
+    const result =  await displayPosts("lost_posts","",options)
+    res.json(result)
+})
+
+
+app.get("/display_posts_found",async (req,res) =>{
+    options = {
+    }
+    const result =  await displayPosts("found_posts","",options)
+    res.json(result)
+})
+
 
 app.listen(port, () => {
     console.log('working at',port)
 })
-
