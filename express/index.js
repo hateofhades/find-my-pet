@@ -1,53 +1,62 @@
-const express = require('express')
-var bodyParser = require('body-parser')
-const { MongoClient } = require('mongodb');
-const { options } = require('nodemon/lib/config');
-const uri = "mongodb+srv://sebastian:seb@cluster0.enpab.mongodb.net/cluster0?retryWrites=true&w=majority";
+const express = require("express");
+var bodyParser = require("body-parser");
+const { MongoClient } = require("mongodb");
+const cors = require("cors");
+const { options } = require("nodemon/lib/config");
+const uri =
+  "mongodb+srv://sebastian:seb@cluster0.enpab.mongodb.net/cluster0?retryWrites=true&w=majority";
 
-const app = express()
+const app = express();
 const port = 5050;
 
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
-app.use(bodyParser.json())
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
-async function displayPosts(collection, query, options){
-    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true});
-    var result = []
-    try{
-        await client.connect();
-        const database = client.db("find-my-pet");
-        const col = database.collection(collection)
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
+app.use(bodyParser.json());
 
-        const cursor = col.find(query, options)
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 
-        if((await col.estimatedDocumentCount) == 0){
-            console.log("No items found")
-        }
+async function displayPosts(collection, query, options) {
+  const client = new MongoClient(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  var result = [];
+  try {
+    await client.connect();
+    const database = client.db("find-my-pet");
+    const col = database.collection(collection);
 
-        await cursor.forEach((e) => {
-            result.push(e)
-        })
-        // console.log(result)
-        return result
-    }finally{
-        await client.close()
+    const cursor = col.find(query, options);
+
+    if ((await col.estimatedDocumentCount) == 0) {
+      console.log("No items found");
     }
-}
 
-async function insertMongo(data,collection){
-    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true});
-
-    try {
-        await client.connect();
-        const database = client.db("find-my-pet");
-        const col = database.collection(collection);
-        const result = await col.insertOne(data);
-        console.log(`A post was inserted with the _id: ${result.insertedId}`);
-      } finally {
-        await client.close();
-      }
+    await cursor.forEach((e) => {
+      result.push(e);
+    });
+    // console.log(result)
+    return result;
+  } finally {
+    await client.close();
+  }
 }
 
 app.post('/lost_post',(req, res) => {
@@ -120,22 +129,36 @@ app.post('/review',(req,res) =>{
     res.send(found_post)
 })
 
-app.get("/display_posts_lost",async (req,res) =>{
-    options = {
-    }
-    const result =  await displayPosts("lost_posts","",options)
-    res.json(result)
-})
 
+async function insertMongo(data, collection) {
+  const client = new MongoClient(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
 
-app.get("/display_posts_found",async (req,res) =>{
-    options = {
-    }
-    const result =  await displayPosts("found_posts","",options)
-    res.json(result)
-})
+  try {
+    await client.connect();
+    const database = client.db("find-my-pet");
+    const col = database.collection(collection);
+    const result = await col.insertOne(data);
+    console.log(`A post was inserted with the _id: ${result.insertedId}`);
+  } finally {
+    await client.close();
+  }
+}
 
+app.get("/display_posts_lost", async (req, res) => {
+  const optiones = {};
+  const result = await displayPosts("lost_posts", "", optiones);
+  res.json(result);
+});
+
+app.get("/display_posts_found", async (req, res) => {
+  const optiones = {};
+  const result = await displayPosts("found_posts", "", optiones);
+  res.json(result);
+});
 
 app.listen(port, () => {
-    console.log('working at',port)
-})
+  console.log("working at", port);
+});

@@ -1,0 +1,27 @@
+{
+  "username": "Utilizator",
+  "email": "E-mail",
+  "password": "Parolă",
+  "goBack": "Înapoi",
+  "authPopup": {
+      "signUp": "Înregistrează-te",
+      "signIn": "Autentifică-te",
+      "forgotPassword": "Ai uitat parola?",
+      "login": {
+          "rememberMe": "Ține-mă minte",
+          "signGoogle": "Autentifică-te cu Google",
+          "signFacebook": "Autentifică-te cu Facebook",
+          "signGithub": "Autentifică-te cu Github"
+      },
+      "register": {
+          "signGoogle": "Înregistrează-te cu Google",
+          "signFacebook": "Înregistrează-te cu Facebook",
+          "signGithub": "Înregistrează-te cu Github",
+          "alreadyMember": "Aveți deja cont?"
+      },
+      "forgot": {
+          "text": "Introduceți e-mail-ul și vă vom trimite instrucțiunile pentru a vă reseta parola.",
+          "resetPassword": "Resetează Parola"
+      }
+  }
+}
