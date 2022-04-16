@@ -6,6 +6,8 @@ import Header from "./Components/AlwaysOn/Header";
 import Footer from "./Components/footer/Footer";
 import Map from "./Components/Map/Map";
 import AddPage from "./Components/AddPage/AddPage";
+import ListPage from "./Components/ListPage/ListPage";
+import ProfilePage from "./Components/ProfilePage/ProfilePage";
 
 function App() {
   const user = useSelector((state) => state.user.user);
@@ -21,6 +23,8 @@ function App() {
       <Header user={user} setLogin={setLogin} />
       {showPage === "map" && <Map />}
       {showPage === "add" && <AddPage />}
+      {showPage === "list" && <ListPage />}
+      {showPage === "profile" && <ProfilePage />}
       {user && <Footer user={user} page={showPage} setPage={setPage} />}
     </div>
   );
