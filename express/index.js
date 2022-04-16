@@ -87,6 +87,7 @@ app.post('/found_post',(req,res) =>{
     const account_id = req.body.accound_id
     const pet_type = req.body.pet_type
     const pet_breed = req.body.pet_breed
+    const date = req.body.date
 
     const found_post = {
         photo,
@@ -96,7 +97,8 @@ app.post('/found_post',(req,res) =>{
         vet,
         account_id,
         pet_type,
-        pet_breed
+        pet_breed,
+        date
     }
     insertMongo(found_post,"found_posts")
     res.send(found_post)
