@@ -2,6 +2,8 @@ from distutils.log import debug
 import tensorflow as tf
 import tensorflow_datasets as tfds
 from flask import Flask, request, render_template
+import requests
+import os
 
 app = Flask(__name__)
 
@@ -18,13 +20,19 @@ def preprocess(ds_row):
 
   return image, label
 
-@app.route('/p',methods=['GET'])
+@app.route('/predict',methods=['GET'])
 def predict():
     dataset, info = tfds.load(name="stanford_dogs", with_info=True)
     get_name = info.features['label'].int2str
 
+    args = request.args
+    url = args.get("photo")
+    print(url)
+    response = requests.get(url)
+    print(response)
+    open("temp.jpeg","wb").write(response.content)
 
-    filename = input("Input file: ")
+    filename = "temp.jpeg"
     dog = tf.io.read_file(filename)
     dog = tf.io.decode_jpeg(dog)
 
@@ -43,7 +51,6 @@ def predict():
 
     top_components = tf.reshape(tf.math.top_k(pred, k=5).indices,shape=[-1])
     top_matches = [get_name(i) for i in top_components]
-
     #print("Dog Breed: {}".format(top_matches[0]))
     return render_template('index.html',predict = "Dog Breed: {}".format(top_matches[0]))
 
