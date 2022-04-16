@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  loginPopupOverlay,
-  loginPopup,
-  imageDiv,
-  xDiv,
-} from "./LoginPopup.module.scss";
+import style from "./LoginPopup.module.scss";
 import x from "./x.svg";
 import Login from "./Login";
 
@@ -14,11 +9,11 @@ function LoginPopup({ setLogin }) {
   };
 
   return (
-    <div className={loginPopupOverlay}>
-      <div className={loginPopup}>
-        <div className={imageDiv}></div>
+    <div className={style.loginPopupOverlay}>
+      <div className={style.loginPopup}>
+        <div className={style.imageDiv}></div>
         <Login setLogin={setLogin} />
-        <div className={xDiv} onClick={handleDissapear}>
+        <div className={style.xDiv} onClick={handleDissapear}>
           <img src={x} alt="" />
         </div>
       </div>

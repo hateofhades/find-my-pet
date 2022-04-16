@@ -1,0 +1,53 @@
+@import '../../variables.scss';
+
+.footerDiv {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 10vh;
+  background-color: #51dafb;
+  text-align: center;
+
+  z-index: 999;
+}
+
+.footerContent {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.footerButton {
+  height: 100%;
+  width: 30%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #51bdfb;
+  }
+}
+
+.footerImg {
+    height: 90%;
+}
+
+.profilePic {
+  height: 100%;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+      height: 90%;
+
+      border-radius: 18px;
+  }
+}
