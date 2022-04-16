@@ -59,6 +59,77 @@ async function displayPosts(collection, query, options) {
   }
 }
 
+app.post('/lost_post',(req, res) => {
+    const id_chip = req.body.id
+    const lost_date = req.body.lost_date
+    const description = req.body.description
+    const photo = req.body.photo
+    const pet_name = req.body.pet_name
+    const lan = req.body.lan
+    const lng = req.body.lng
+    const account_id = req.body.accound_id
+    const pet_type = req.body.pet_type
+    const pet_breed = req.body.pet_breed
+
+    const lost_post = {
+        id_chip,
+        lost_date,
+        description,
+        photo,
+        pet_name,
+        lan,
+        lng,
+        account_id,
+        pet_type,
+        pet_breed
+    }
+    insertMongo(lost_post,"lost_posts")
+    res.send(lost_post)
+})
+
+app.post('/found_post',(req,res) =>{
+    const photo = req.body.photo
+    const lan = req.body.lan
+    const lng = req.body.lng
+    const contact = req.body.contact
+    const vet = req.body.vet
+    const account_id = req.body.accound_id
+    const pet_type = req.body.pet_type
+    const pet_breed = req.body.pet_breed
+
+    const found_post = {
+        photo,
+        lan,
+        lng,
+        contact,
+        vet,
+        account_id,
+        pet_type,
+        pet_breed
+    }
+    insertMongo(found_post,"found_posts")
+    res.send(found_post)
+})
+
+app.post('/review',(req,res) =>{
+    const id = req.body.account_id
+    const rating = req.body.rating
+    const post_id = req.body.post_id
+    const description = req.body.description
+    const account_id = req.body.accound_id
+
+    const review = {
+        id,
+        rating,
+        post_id,
+        description,
+        account_id
+    }
+    insertMongo(found_post,"review")
+    res.send(found_post)
+})
+
+
 async function insertMongo(data, collection) {
   const client = new MongoClient(uri, {
     useNewUrlParser: true,
@@ -75,68 +146,6 @@ async function insertMongo(data, collection) {
     await client.close();
   }
 }
-
-app.post("/lost_post", (req, res) => {
-  const id_chip = req.body.id;
-  const lost_date = req.body.lost_date;
-  const description = req.body.description;
-  const photo = req.body.photo;
-  const pet_name = req.body.pet_name;
-  const lan = req.body.lan;
-  const lng = req.body.lng;
-  const account_id = req.body.accound_id;
-
-  const lost_post = {
-    id_chip,
-    lost_date,
-    description,
-    photo,
-    pet_name,
-    lan,
-    lng,
-    account_id,
-  };
-  insertMongo(lost_post, "lost_posts");
-  res.send(lost_post);
-});
-
-app.post("/found_post", (req, res) => {
-  const photo = req.body.photo;
-  const lan = req.body.lan;
-  const lng = req.body.lng;
-  const contact = req.body.contact;
-  const vet = req.body.vet;
-  const account_id = req.body.accound_id;
-
-  const found_post = {
-    photo,
-    lan,
-    lng,
-    contact,
-    vet,
-    account_id,
-  };
-  insertMongo(found_post, "found_posts");
-  res.send(found_post);
-});
-
-app.post("/review", (req, res) => {
-  const id = req.body.account_id;
-  const rating = req.body.rating;
-  const post_id = req.body.post_id;
-  const description = req.body.description;
-  const account_id = req.body.accound_id;
-
-  const review = {
-    id,
-    rating,
-    post_id,
-    description,
-    account_id,
-  };
-  insertMongo(found_post, "review");
-  res.send(found_post);
-});
 
 app.get("/display_posts_lost", async (req, res) => {
   const optiones = {};
