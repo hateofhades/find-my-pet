@@ -31,6 +31,30 @@ app.use(function (req, res, next) {
   );
   next();
 });
+
+
+async function displayUser(user){
+    const client = new MongoClient(uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      });
+      var result = [];
+      try {
+        await client.connect();
+        const database = client.db("find-my-pet");
+        const col = database.collection("accounts");
+
+        result = await displayPosts("accounts","","")
+        result.forEach(element => {
+            if(element.email == user){
+                output = element
+            }
+        })
+        return output
+      } finally {
+        await client.close();
+      }
+}
 async function insertMongo(data, collection) {
     const client = new MongoClient(uri, {
       useNewUrlParser: true,
@@ -140,6 +164,7 @@ app.post('/lost_post',(req, res) => {
     const account_id = req.body.accound_id
     const pet_type = req.body.pet_type
     const pet_breed = req.body.pet_breed
+    const email = req.body.email
 
     const lost_post = {
         id_chip,
@@ -151,7 +176,8 @@ app.post('/lost_post',(req, res) => {
         lng,
         account_id,
         pet_type,
-        pet_breed
+        pet_breed,
+        email
     }
     insertMongo(lost_post,"lost_posts")
     res.send(lost_post)
@@ -167,6 +193,9 @@ app.post('/found_post',(req,res) =>{
     const pet_type = req.body.pet_type
     const pet_breed = req.body.pet_breed
     const date = req.body.date
+    const description = req.body.description
+    const email = req.body.email
+    const phone = req.body.phone 
 
     const found_post = {
         photo,
@@ -177,7 +206,10 @@ app.post('/found_post',(req,res) =>{
         account_id,
         pet_type,
         pet_breed,
-        date
+        date,
+        email,
+        phone,
+        description
     }
     insertMongo(found_post,"found_posts")
     res.send(found_post)
@@ -197,10 +229,9 @@ app.post('/review',(req,res) =>{
         description,
         account_id
     }
-    insertMongo(found_post,"review")
-    res.send(found_post)
+    insertMongo(review,"review")
+    res.send(review)
 })
-
 
 app.get("/display_posts_lost", async (req, res) => {
   const optiones = {};
@@ -211,6 +242,7 @@ app.get("/display_posts_lost", async (req, res) => {
 app.get("/display_posts_found", async (req, res) => {
   const optiones = {};
   const result = await displayPosts("found_posts", "", optiones);
+  res.json(result);
 });
 
 app.post("/login", async(req,res) =>{
@@ -242,6 +274,16 @@ app.post("/phone", async(req,res) =>{
 
     update_mongo(user)
     res.send(user)
+})
+
+app.get("/getuser", async(req, res) => {
+    const user = req.body.email;
+    const result = await displayUser(user)
+    res.json(result)
+})
+
+app.get("/userposts", async(req, res) =>{
+    const user = req.body.email;
 })
 
 app.listen(port, () => {
