@@ -1,0 +1,66 @@
+@import '../../variables.scss';
+
+.announcement {
+    width: 80vw;
+    height: 20vh;
+    margin-top: 2vh;
+    background-color: #E0E1DD;
+    border: 5px solid #778DA9;
+    border-radius: 20px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    transition: all 100ms ease-in-out;
+
+    @media (max-width: $phone) {
+        width: 100%;
+    }
+
+    img {
+        height: 100px;
+    }
+
+    div {
+        img {
+            height: 80%;
+        }
+    }
+}
+
+.announcementType {
+    margin: 2vw;
+    font-size: 3.5vh;
+
+    @media (max-width: $phone) {
+        font-size: 2vh;
+    }
+}
+
+.descriptionBox {
+    width: 80vw;
+    min-height: 20vh;
+    
+    background-color: #E0E1DD;
+    border: 5px solid #778DA9;
+    border-radius: 20px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    transition: all 100ms ease-in-out;
+
+    font-size: 1.5vh;
+
+    @media (max-width: $phone) {
+        width: 100%;
+    }
+}
+
+.spacer {
+    height: 12vh;
+}
