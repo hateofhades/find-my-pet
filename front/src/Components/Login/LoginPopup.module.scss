@@ -1,0 +1,64 @@
+@import '../../variables.scss';
+
+.loginPopupOverlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    transition: opacity 500ms;
+    opacity: 1;
+    z-index: 99;
+}
+
+.loginPopup {
+    background: #fff;
+    border-radius: 5px;
+
+    min-width: 700px;
+    min-height: 600px;
+
+    width: 50vw;
+    height: 60vh;
+    position: relative;
+    transition: all 500ms ease-in-out;
+
+    //Centering
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    //Half
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    
+    box-shadow: rgba(51, 102, 204, 0.5) 1px 2px 8px, rgba(0, 0, 0, 0.22) 1px 2px 8px;
+
+    @media (max-width: $tablet) {
+        width: 96vw;
+        height: 96vh;
+        min-width: 0px;
+        min-height: 0px;
+    }
+}
+
+.imageDiv {
+    height: 100%;
+    width: 50%;
+    background-image: url('./LoginImage.jpg');
+    background-repeat: repeat-y;
+    background-size: contain;
+    border-radius: 5px 0px 0px 5px;
+}
+
+.xDiv {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+
+    &:hover {
+        cursor: pointer;
+    }
+}

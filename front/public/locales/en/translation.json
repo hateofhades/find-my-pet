@@ -1,0 +1,35 @@
+{
+    "username": "Username",
+    "email": "E-mail",
+    "password": "Password",
+    "goBack": "Go back",
+    "authPopup": {
+        "signUp": "Sign Up",
+        "signIn": "Sign In",
+        "forgotPassword": "Forgot password?",
+        "login": {
+            "rememberMe": "Remember me",
+            "signGoogle": "Sign In with Google",
+            "signGithub": "Sign In with Github",
+            "invalidLogin": "Username or password is incorrect."
+        },
+        "register": {
+            "signGoogle": "Sign Up with Google",
+            "signGithub": "Sign Up with Github",
+            "alreadyMember": "Already a member?",
+            "invalidUsername": "Username should only contain alphanumeric characters and should be between 4 and 31 characters.",
+            "invalidEmail": "Email is invalid.",
+            "invalidPassword": "Password should be between 7 and 31 characters.",
+            "alreadyUsed": "Username or email is already used."
+        },
+        "forgot": {
+            "text": "Enter your e-mail and we will send you instructions to reset your password.",
+            "resetPassword": "Reset Password"
+        },
+        "chooseUsername": {
+            "title": "Choose an username",
+            "button": "Submit",
+            "alreadyUsed": "Username is already used."
+        }
+    }
+}
