@@ -6,21 +6,23 @@ import pinImg from "./pin.png";
 
 function MapComponent() {
   const [popupInfo, setPopupInfo] = useState(null);
-  const [locationData, setLocationData] = useState([]);
+  const [lostLocationData, setLostLocationData] = useState([]);
+  const [foundLocationData, setFoundLocationData] = useState([]);
   const [viewport, setViewport] = useState({
     latitude: 44.442110316543896,
     longitude: 26.097182594212356,
     zoom: 13,
   });
 
-  console.log(locationData);
+  console.log(foundLocationData);
 
   useEffect(() => {
     async function fetchData() {
-      const result = await axios.get(
-        "http://localhost:5050/display_posts_lost"
-      );
-      setLocationData(result.data);
+      let result = await axios.get("http://localhost:5050/display_posts_lost");
+      setLostLocationData(result.data);
+
+      result = await axios.get("http://localhost:5050/display_posts_found");
+      setFoundLocationData(result.data);
     }
     fetchData();
   }, []);
@@ -32,7 +34,7 @@ function MapComponent() {
       mapStyle="mapbox://styles/mapbox/streets-v9"
       style={{ width: "100%", height: "100vh" }}
     >
-      {locationData.map((pet) => (
+      {lostLocationData.map((pet) => (
         <Marker
           latitude={pet.lan}
           longitude={pet.lng}
@@ -40,9 +42,10 @@ function MapComponent() {
           anchor="bottom"
           onClick={() =>
             setPopupInfo({
+              typePin: "lost",
               name: pet.pet_name,
-              type: "caine",
-              rasa: "caine",
+              type: pet.pet_type,
+              rasa: pet.pet_breed,
               image: pet.photo,
               latitude: pet.lan,
               longitude: pet.lng,
@@ -62,6 +65,37 @@ function MapComponent() {
           />
         </Marker>
       ))}
+      {foundLocationData.map((pet) => (
+        <Marker
+          latitude={pet.lan}
+          longitude={pet.lng}
+          key={pet._id}
+          anchor="bottom"
+          onClick={() =>
+            setPopupInfo({
+              typePin: "found",
+              name: pet.contact,
+              type: pet.pet_type,
+              rasa: pet.pet_breed,
+              image: pet.photo,
+              latitude: pet.lan,
+              longitude: pet.lng,
+              lostDate: pet.date,
+            })
+          }
+        >
+          <img
+            style={{
+              height: "25px",
+              width: "25px",
+              backgroundColor: "#ff0000",
+              borderRadius: "40%",
+            }}
+            src={pinImg}
+            alt="pin"
+          />
+        </Marker>
+      ))}
       {popupInfo && (
         <Popup
           anchor="top"
@@ -70,11 +104,26 @@ function MapComponent() {
           closeOnClick={false}
           onClose={() => setPopupInfo(null)}
         >
-          <div>
-            {popupInfo.name} | {popupInfo.type} | {popupInfo.rasa}
-            <br /> Date: {popupInfo.lostDate}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "column",
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            <div>
+              <p>{popupInfo.typePin === "lost" ? "Lost" : "Found"}</p>
+              <p>
+                {popupInfo.name} | {popupInfo.type} | {popupInfo.rasa}
+              </p>
+              <p> Date: {popupInfo.lostDate}</p>
+            </div>
+            <div style={{ display: "flex" }}>
+              <img width="60vw" src={popupInfo.image} />
+            </div>
           </div>
-          <img width="60vw" src={pinImg} />
         </Popup>
       )}
     </Map>

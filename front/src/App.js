@@ -5,11 +5,13 @@ import LoginPopup from "./Components/Login/LoginPopup";
 import Header from "./Components/AlwaysOn/Header";
 import Footer from "./Components/footer/Footer";
 import Map from "./Components/Map/Map";
+import AddPage from "./Components/AddPage/AddPage";
 
 function App() {
   const user = useSelector((state) => state.user.user);
 
   const [showLogin, setLogin] = useState(false);
+  const [showPage, setPage] = useState("map");
 
   console.log(user);
 
@@ -17,8 +19,9 @@ function App() {
     <div className="App">
       {showLogin && <LoginPopup setLogin={setLogin} />}
       <Header user={user} setLogin={setLogin} />
-      <Map />
-      {user && <Footer user={user} />}
+      {showPage === "map" && <Map />}
+      {showPage === "add" && <AddPage />}
+      {user && <Footer user={user} page={showPage} setPage={setPage} />}
     </div>
   );
 }
