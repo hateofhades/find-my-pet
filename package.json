@@ -23,6 +23,8 @@
     "express": "^4.17.3",
     "mongodb": "^4.5.0",
     "nodemon": "^2.0.15",
+    "react-phone-input-2": "^2.15.0",
+    "react-phone-number-input": "^3.1.50",
     "tesseract.js": "^1.0.19"
   }
 }
