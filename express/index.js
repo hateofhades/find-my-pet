@@ -43,21 +43,40 @@ async function searchForWords(query){
 
           found_posts = await displayPosts("found_posts","","")
           lost_posts = await displayPosts("lost_posts","","")
-          found_posts.forEach(element =>{
-            query.forEach(q => {
-              if(element.description.includes(q) || element.contact.includes(q) || element.pet_breed.includes(q) || element.pet_type.includes(q)){
-                posts.push(element)
-              }
-            })
-          })
 
-          lost_posts.forEach(element =>{
-            query.forEach(q => {
-              if(element.pet_name.includes(q) || element.description.includes(q) || element.id_chip == (q) || element.pet_breed.includes(q) || element.pet_type.includes(q)){
+          if(Array.isArray(query) == true){
+            found_posts.forEach(element =>{
+              query.forEach(q => {
+                if(element.description.includes(q) || element.contact == (q) || element.pet_name == (q) || element.pet_breed == (q) || element.pet_type == (q)){
+                  posts.push(element)
+                }
+              })
+            })
+  
+            lost_posts.forEach(element =>{
+              query.forEach(q => {
+                if(element.pet_name == (q) || element.description.includes(q) || element.id_chip == (q) || element.pet_breed == (q) || element.pet_type == (q)){
+                  posts.push(element)
+                }
+              })
+            })
+          }
+
+          else{
+            found_posts.forEach(element =>{
+              if(element.description.includes(query) || element.contact == (query) || element.pet_name == (query) || element.pet_breed == (query) || element.pet_type == (query)){
+                console.log("here")
                 posts.push(element)
               }
             })
-          })
+
+            lost_posts.forEach(element =>{
+                if(element.pet_name == (query) || element.description.includes(query) || element.id_chip == (query) || element.pet_breed == (query) || element.pet_type == (query)){
+                  console.log("here")
+                  posts.push(element)
+                }
+            })
+          }
         console.log(posts)
       }finally{
           client.close()
@@ -297,6 +316,7 @@ app.get("/userposts", async (req, res) => {
 app.get("/getkeywords", async (req,res) =>{
     keywords = req.query;
     var output = await searchForWords(keywords['keywords'])
+    console.log(keywords['keywords'])
     res.json(output)
 })
 
