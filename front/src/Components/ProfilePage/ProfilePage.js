@@ -4,10 +4,19 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../store/user";
+import axios from "axios";
 
 function ProfilePage({ user }) {
   const [phoneValue, setPhone] = useState(user.phoneValue);
   const dispatch = useDispatch();
+
+  const handleSave = () => {
+    dispatch(loginSuccess({ ...user, phoneValue }));
+    axios.post("http://localhost:5050/phone", {
+      phone: phoneValue,
+      email: user.email,
+    });
+  };
 
   return (
     <div className={style.profilePage}>
@@ -25,13 +34,14 @@ function ProfilePage({ user }) {
           value={phoneValue}
           onChange={(phone) => {
             setPhone(phone);
-            dispatch(loginSuccess({ ...user, phoneValue }));
           }}
         />
+        {phoneValue != user.phoneValue && (
+          <div className={style.phoneButton} onClick={handleSave}>
+            Save
+          </div>
+        )}
       </div>
-      <div className={style.profileButton}>My announcements</div>
-      <div className={style.profileButton}>My announcements</div>
-      <div className={style.profileButton}>My announcements</div>
     </div>
   );
 }
