@@ -152,6 +152,7 @@ async function displayPosts(collection, query, options) {
 }
 
 app.post("/lost_post", (req, res) => {
+  console.log(req.body);
   const id_chip = req.body.id;
   const lost_date = req.body.lost_date;
   const description = req.body.description;
@@ -163,6 +164,7 @@ app.post("/lost_post", (req, res) => {
   const pet_type = req.body.pet_type;
   const pet_breed = req.body.pet_breed;
   const email = req.body.email;
+  const phone = req.body.phone;
 
   const lost_post = {
     id_chip,
@@ -176,6 +178,7 @@ app.post("/lost_post", (req, res) => {
     pet_type,
     pet_breed,
     email,
+    phone,
   };
   insertMongo(lost_post, "lost_posts");
   res.send(lost_post);
@@ -185,7 +188,6 @@ app.post("/found_post", (req, res) => {
   const photo = req.body.photo;
   const lan = req.body.lan;
   const lng = req.body.lng;
-  const contact = req.body.contact;
   const vet = req.body.vet;
   const account_id = req.body.accound_id;
   const pet_type = req.body.pet_type;
@@ -199,7 +201,6 @@ app.post("/found_post", (req, res) => {
     photo,
     lan,
     lng,
-    contact,
     vet,
     account_id,
     pet_type,

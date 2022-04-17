@@ -38,6 +38,7 @@ function ListPage() {
           photo={pet.photo}
           description={pet.description}
           date={pet.lost_date}
+          phone={pet.phone}
         />
       ))}
       {foundLocationData.map((pet) => (
@@ -51,6 +52,8 @@ function ListPage() {
           petType={pet.pet_type}
           petBreed={pet.pet_breed}
           date={pet.date}
+          phone={pet.phone}
+          description={pet.description}
         />
       ))}
       <div className={style.profileSpacer}></div>

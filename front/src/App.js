@@ -22,7 +22,7 @@ function App() {
       {showLogin && <LoginPopup setLogin={setLogin} />}
       <Header user={user} setLogin={setLogin} />
       {showPage === "map" && <Map />}
-      {showPage === "add" && <AddPage />}
+      {showPage === "add" && <AddPage setPage={setPage} />}
       {showPage === "list" && <ListPage />}
       {showPage === "profile" && <ProfilePage user={user} />}
       {user && <Footer user={user} page={showPage} setPage={setPage} />}

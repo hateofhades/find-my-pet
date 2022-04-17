@@ -3,9 +3,10 @@ import tensorflow as tf
 import tensorflow_datasets as tfds
 from flask import Flask, request, render_template
 import requests
-import os
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 IMG_LEN = 224
 IMG_SHAPE = (IMG_LEN,IMG_LEN,3)
@@ -52,7 +53,7 @@ def predict():
     top_components = tf.reshape(tf.math.top_k(pred, k=5).indices,shape=[-1])
     top_matches = [get_name(i) for i in top_components]
     #print("Dog Breed: {}".format(top_matches[0]))
-    return render_template('index.html',predict = "Dog Breed: {}".format(top_matches[0]))
+    return top_matches[0]
 
 @app.route('/')
 def home():

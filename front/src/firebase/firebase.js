@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+import { getStorage, ref, uploadBytes } from "firebase/storage";
 import {
   getAuth,
   TwitterAuthProvider,
@@ -19,7 +20,17 @@ const firebaseConfig = {
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseApp);
+const storage = getStorage(firebaseApp);
 const googleProvider = new GoogleAuthProvider();
 const twitterProvider = new TwitterAuthProvider();
 
-export { firebaseApp, auth, googleProvider, twitterProvider };
+const imagesRef = ref(storage, "py-img.png");
+
+export {
+  firebaseApp,
+  auth,
+  googleProvider,
+  twitterProvider,
+  storage,
+  imagesRef,
+};

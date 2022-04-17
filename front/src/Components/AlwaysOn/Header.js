@@ -12,9 +12,7 @@ function Header({ user, setLogin }) {
   const goLogout = () => {
     axios.defaults.withCredentials = true;
 
-    dispatch(
-      loginSuccess(null)
-    );
+    dispatch(loginSuccess(null));
     window.location.reload(false);
   };
 
@@ -24,8 +22,6 @@ function Header({ user, setLogin }) {
         <div className={style.profilePic}>
           <img alt="profilePic" src={user.picture || defaultPic} />
           <div className={style.dropdownPic}>
-            <button>Profile</button>
-            <button>Settings</button>
             <button onClick={goLogout}>Log out</button>
           </div>
         </div>

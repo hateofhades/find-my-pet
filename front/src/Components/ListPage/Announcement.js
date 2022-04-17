@@ -9,12 +9,12 @@ function Announcement({
   petType,
   petBreed,
   description,
-  user,
   date,
   lostType,
   lat,
   lng,
   photo,
+  phone,
 }) {
   const [mapVisible, setMapVisible] = useState(false);
   const handleDropdown = () => {
@@ -33,7 +33,7 @@ function Announcement({
         >
           <img style={{ marginLeft: "2vw" }} src={photo} />
           <div className={style.announcementType}>
-            <p>{lostType ? petName : "Pet found"}</p>
+            <p>{lostType ? "Pet lost: " + petName : "Pet found"}</p>
             <p>{petType}</p>
             <p>{petBreed}</p>
           </div>
@@ -48,8 +48,7 @@ function Announcement({
       {mapVisible && (
         <div className={style.descriptionBox}>
           <div>Description: {description}</div>
-          <div>Lost by: Eu</div>
-          <div>Contact number: 0711234566</div>
+          <div>Contact number: {phone} </div>
           <div>Found date: {date}</div>
           <Map
             mapboxAccessToken="pk.eyJ1IjoiYW5kcmVpc3RhbGtlciIsImEiOiJjbDIxenZrb3AwNjd3M2Vvb2FsNTRqeGdxIn0.GE5KJr0GieZCFW01upHwrA"

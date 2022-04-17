@@ -12,9 +12,6 @@ function Login({ setLogin }) {
   return (
     <div className={style.loginDiv}>
       <div className={`${style.otherDivs}`}>
-        <h1 className={style.loginText}>
-          Please log in using the following providers:
-        </h1>
         <SocialButton
           text={t("authPopup.login.signGoogle")}
           logo={gLogo}
