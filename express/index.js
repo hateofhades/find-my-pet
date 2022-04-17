@@ -2,7 +2,6 @@ const express = require("express");
 var bodyParser = require("body-parser");
 const { MongoClient } = require("mongodb");
 const cors = require("cors");
-const { options } = require("nodemon/lib/config");
 const uri =
   "mongodb+srv://sebastian:seb@cluster0.enpab.mongodb.net/cluster0?retryWrites=true&w=majority";
 
@@ -32,6 +31,42 @@ app.use(function (req, res, next) {
   next();
 });
 
+async function searchForWords(query){
+    const client = new MongoClient(uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      });
+      var result = [];
+      var posts = [];
+      try{
+          await client.connect();
+          const database = client.db("find-my-pet");
+          const col = database.collection("found_posts");
+
+          found_posts = await displayPosts("found_posts","","")
+          lost_posts = await displayPosts("lost_posts","","")
+          found_posts.forEach(element =>{
+            query.forEach(q => {
+              if(element.description.includes(q) || element.contact.includes(q) || element.pet_breed.includes(q) || element.pet_type.includes(q)){
+                posts.push(element)
+              }
+            })
+          })
+
+          lost_posts.forEach(element =>{
+            query.forEach(q => {
+              if(element.pet_name.includes(q) || element.description.includes(q) || element.id_chip == (q) || element.pet_breed.includes(q) || element.pet_type.includes(q)){
+                posts.push(element)
+              }
+            })
+          })
+        console.log(posts)
+          return posts
+      }finally{
+          client.close()
+      }
+}
+      
 
 async function displayUser(user){
     const client = new MongoClient(uri, {
@@ -284,6 +319,12 @@ app.get("/getuser", async(req, res) => {
 
 app.get("/userposts", async(req, res) =>{
     const user = req.body.email;
+})
+
+app.get("/getkeywords", async(req,res) =>{
+    keywords = req.query;
+    const ouput = await searchForWords(keywords['keywords'])
+    res.json("output")
 })
 
 app.listen(port, () => {
