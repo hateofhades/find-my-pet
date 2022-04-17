@@ -23,17 +23,9 @@
     "bootstrap-switch-button-react": "^1.2.0",
     "cors": "^2.8.5",
     "express": "^4.17.3",
-    "image-to-base64": "^2.2.0",
+    "mathjs": "^10.4.3",
     "mongodb": "^4.5.0",
     "nodemon": "^2.0.15",
-    "pretty-checkbox": "^3.0.3",
-    "pretty-checkbox-react": "^3.2.0",
-    "react-bootstrap": "^2.2.3",
-    "react-bootstrap-date-picker": "^5.1.0",
-    "react-datepicker": "^4.7.0",
-    "react-hook-form": "^7.29.0",
-    "react-phone-input-2": "^2.15.0",
-    "react-phone-number-input": "^3.1.50",
     "tesseract.js": "^1.0.19"
   }
 }

@@ -1,7 +1,9 @@
 const express = require("express");
 var bodyParser = require("body-parser");
 const { MongoClient } = require("mongodb");
+const Math = require("mathjs");
 const cors = require("cors");
+const { range } = require("mathjs");
 const uri =
   "mongodb+srv://sebastian:seb@cluster0.enpab.mongodb.net/cluster0?retryWrites=true&w=majority";
 
@@ -31,57 +33,79 @@ app.use(function (req, res, next) {
   next();
 });
 
-async function searchForWords(query){
-    const client = new MongoClient(uri, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
+async function searchForWords(query) {
+  const client = new MongoClient(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  var result = [];
+  var posts = [];
+  try {
+    await client.connect();
+
+    found_posts = await displayPosts("found_posts", "", "");
+    lost_posts = await displayPosts("lost_posts", "", "");
+
+    if (Array.isArray(query) == true) {
+      found_posts.forEach((element) => {
+        query.forEach((q) => {
+          if (
+            element.description.includes(q) ||
+            element.contact == q ||
+            element.pet_name == q ||
+            element.pet_breed == q ||
+            element.pet_type == q
+          ) {
+            posts.push(element);
+          }
+        });
       });
-      var result = [];
-      var posts = [];
-      try{
-          await client.connect();
 
-          found_posts = await displayPosts("found_posts","","")
-          lost_posts = await displayPosts("lost_posts","","")
-
-          if(Array.isArray(query) == true){
-            found_posts.forEach(element =>{
-              query.forEach(q => {
-                if(element.description.includes(q) || element.contact == (q) || element.pet_name == (q) || element.pet_breed == (q) || element.pet_type == (q)){
-                  posts.push(element)
-                }
-              })
-            })
-  
-            lost_posts.forEach(element =>{
-              query.forEach(q => {
-                if(element.pet_name == (q) || element.description.includes(q) || element.id_chip == (q) || element.pet_breed == (q) || element.pet_type == (q)){
-                  posts.push(element)
-                }
-              })
-            })
+      lost_posts.forEach((element) => {
+        query.forEach((q) => {
+          if (
+            element.pet_name == q ||
+            element.description.includes(q) ||
+            element.id_chip == q ||
+            element.pet_breed == q ||
+            element.pet_type == q
+          ) {
+            posts.push(element);
           }
+        });
+      });
+    } else {
+      found_posts.forEach((element) => {
+        if (
+          element.description.includes(query) ||
+          element.contact == query ||
+          element.pet_name == query ||
+          element.pet_breed == query ||
+          element.pet_type == query
+        ) {
+          console.log("here");
+          posts.push(element);
+        }
+      });
 
-          else{
-            found_posts.forEach(element =>{
-              if(element.description.includes(query) || element.contact == (query) || element.pet_name == (query) || element.pet_breed == (query) || element.pet_type == (query)){
-                console.log("here")
-                posts.push(element)
-              }
-            })
-
-            lost_posts.forEach(element =>{
-                if(element.pet_name == (query) || element.description.includes(query) || element.id_chip == (query) || element.pet_breed == (query) || element.pet_type == (query)){
-                  console.log("here")
-                  posts.push(element)
-                }
-            })
-          }
-        console.log(posts)
-      }finally{
-          client.close()
-          return posts
-      }
+      lost_posts.forEach((element) => {
+        if (
+          element.pet_name == query ||
+          element.description.includes(query) ||
+          element.id_chip == query ||
+          element.pet_breed == query ||
+          element.pet_type == query
+        ) {
+          console.log("here");
+          posts.push(element);
+        }
+      });
+    }
+    console.log(posts);
+  } finally {
+    client.close();
+    return posts;
+  }
 }
 async function insertMongo(data, collection) {
   const client = new MongoClient(uri, {
@@ -174,6 +198,52 @@ async function displayPosts(collection, query, options) {
       result.push(e);
     });
     // console.log(result)
+    return result;
+  } finally {
+    await client.close();
+  }
+}
+
+async function getRange(collection, query, options) {
+  const client = new MongoClient(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  var result = [];
+  try {
+    await client.connect();
+
+    await client.connect();
+    const database = client.db("find-my-pet");
+    const col = database.collection(collection);
+
+    const cursor = col.find(query, options);
+
+    if ((await col.estimatedDocumentCount) == 0) {
+      console.log("No items found");
+    }
+
+    let { lan, lng, radius } = options;
+
+    await cursor.forEach((e) => {
+      let distance =
+        1.609344 *
+        3963.0 *
+        Math.acos(
+          Math.sin(lan / 57.29577951) * Math.sin(e.lan / 57.29577951) +
+            Math.cos(lan / 57.29577951) *
+              Math.cos(e.lan / 57.29577951) *
+              Math.cos(e.lng / 57.29577951 - lng / 57.29577951)
+        );
+
+      console.log(distance, radius);
+      if (distance <= radius) {
+        result.push(e);
+      }
+
+      console.log(result);
+    });
+
     return result;
   } finally {
     await client.close();
@@ -314,12 +384,25 @@ app.get("/userposts", async (req, res) => {
   const user = req.body.email;
 });
 
-app.get("/getkeywords", async (req,res) =>{
-    keywords = req.query;
-    var output = await searchForWords(keywords['keywords'])
-    console.log(keywords['keywords'])
-    res.json(output)
-})
+app.get("/getkeywords", async (req, res) => {
+  keywords = req.query;
+  var output = await searchForWords(keywords["keywords"]);
+  console.log(keywords["keywords"]);
+  res.json(output);
+});
+
+app.get("/getRange", async (req, res) => {
+  const lan = req.query.lan;
+  const lng = req.query.lng;
+  const radius = req.query.radius;
+
+  const result = await getRange("lost_posts", "", {
+    lan: lan,
+    lng: lng,
+    radius: radius,
+  });
+  res.json(result);
+});
 
 app.listen(port, () => {
   console.log("working at", port);
