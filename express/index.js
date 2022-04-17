@@ -47,7 +47,7 @@ async function searchForWords(query){
           if(Array.isArray(query) == true){
             found_posts.forEach(element =>{
               query.forEach(q => {
-                if(element.description.includes(q) || element.contact == (q) || element.pet_name == (q) || element.pet_breed == (q) || element.pet_type == (q)){
+                if(element.description.includes(q) || element.contact == (q) || element.pet_name == (q) || element.pet_breed.includes(q) || element.pet_type == (q)){
                   posts.push(element)
                 }
               })
@@ -55,7 +55,7 @@ async function searchForWords(query){
   
             lost_posts.forEach(element =>{
               query.forEach(q => {
-                if(element.pet_name == (q) || element.description.includes(q) || element.id_chip == (q) || element.pet_breed == (q) || element.pet_type == (q)){
+                if(element.pet_name == (q) || element.description.includes(q) || element.id_chip == (q) || element.pet_breed.includes(q) || element.pet_type == (q)){
                   posts.push(element)
                 }
               })
@@ -64,14 +64,14 @@ async function searchForWords(query){
 
           else{
             found_posts.forEach(element =>{
-              if(element.description.includes(query) || element.contact == (query) || element.pet_name == (query) || element.pet_breed == (query) || element.pet_type == (query)){
+              if(element.description.includes(query) || element.contact == (query) || element.pet_name == (query) || element.pet_breed.includes(query) || element.pet_type == (query)){
                 console.log("here")
                 posts.push(element)
               }
             })
 
             lost_posts.forEach(element =>{
-                if(element.pet_name == (query) || element.description.includes(query) || element.id_chip == (query) || element.pet_breed == (query) || element.pet_type == (query)){
+                if(element.pet_name == (query) || element.description.includes(query) || element.id_chip == (query) || element.pet_breed.includes(query) || element.pet_type == (query)){
                   console.log("here")
                   posts.push(element)
                 }
