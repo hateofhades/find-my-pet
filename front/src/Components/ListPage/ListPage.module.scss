@@ -7,4 +7,12 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    .filter {
+        border-radius: 20%;
+        &:hover {
+            cursor: pointer;
+            background-color: #51dafb;
+        }
+    }
 }

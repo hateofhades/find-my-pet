@@ -12,7 +12,7 @@ const port = 5050;
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "*",
     credentials: true,
   })
 );
@@ -241,9 +241,9 @@ async function getRange(collection, query, options) {
       if (distance <= radius) {
         result.push(e);
       }
-
-      console.log(result);
     });
+
+    return result;
   } finally {
     await client.close();
   }
@@ -390,12 +390,25 @@ app.get("/getkeywords", async (req, res) => {
   res.json(output);
 });
 
-app.get("/getRange", async (req, res) => {
+app.get("/getRangeLost", async (req, res) => {
   const lan = req.query.lan;
   const lng = req.query.lng;
   const radius = req.query.radius;
 
   const result = await getRange("lost_posts", "", {
+    lan: lan,
+    lng: lng,
+    radius: radius,
+  });
+  res.json(result);
+});
+
+app.get("/getRangeFound", async (req, res) => {
+  const lan = req.query.lan;
+  const lng = req.query.lng;
+  const radius = req.query.radius;
+
+  const result = await getRange("found_posts", "", {
     lan: lan,
     lng: lng,
     radius: radius,

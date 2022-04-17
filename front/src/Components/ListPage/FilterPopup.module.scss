@@ -1,6 +1,6 @@
 @import '../../variables.scss';
 
-.loginPopupOverlay {
+.popupOverlay {
     position: fixed;
     top: 0;
     bottom: 0;
@@ -12,7 +12,7 @@
     z-index: 1000;
 }
 
-.loginPopup {
+.filterPopup {
     background: #fff;
     border-radius: 5px;
 
@@ -31,6 +31,7 @@
 
     //Half
     display: flex;
+    flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
     
@@ -42,13 +43,6 @@
         min-width: 0px;
         min-height: 0px;
     }
-}
-
-.imageDiv {
-    height: 100%;
-    width: 50%;
-    background-image: url('./LoginImage.jpg');
-    border-radius: 5px 0px 0px 5px;
 }
 
 .xDiv {
