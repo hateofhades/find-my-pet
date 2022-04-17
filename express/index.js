@@ -53,7 +53,7 @@ async function searchForWords(query) {
             element.description.includes(q) ||
             element.contact == q ||
             element.pet_name == q ||
-            element.pet_breed == q ||
+            element.pet_breed.includes(q) ||
             element.pet_type == q
           ) {
             posts.push(element);
@@ -67,7 +67,7 @@ async function searchForWords(query) {
             element.pet_name == q ||
             element.description.includes(q) ||
             element.id_chip == q ||
-            element.pet_breed == q ||
+            element.pet_breed.includes(q) ||
             element.pet_type == q
           ) {
             posts.push(element);
@@ -80,7 +80,7 @@ async function searchForWords(query) {
           element.description.includes(query) ||
           element.contact == query ||
           element.pet_name == query ||
-          element.pet_breed == query ||
+          element.pet_breed.includes(query) ||
           element.pet_type == query
         ) {
           console.log("here");
@@ -93,7 +93,7 @@ async function searchForWords(query) {
           element.pet_name == query ||
           element.description.includes(query) ||
           element.id_chip == query ||
-          element.pet_breed == query ||
+          element.pet_breed.includes(query) ||
           element.pet_type == query
         ) {
           console.log("here");
@@ -107,6 +107,7 @@ async function searchForWords(query) {
     return posts;
   }
 }
+
 async function insertMongo(data, collection) {
   const client = new MongoClient(uri, {
     useNewUrlParser: true,
@@ -243,8 +244,6 @@ async function getRange(collection, query, options) {
 
       console.log(result);
     });
-
-    return result;
   } finally {
     await client.close();
   }
