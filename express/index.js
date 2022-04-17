@@ -40,8 +40,6 @@ async function searchForWords(query){
       var posts = [];
       try{
           await client.connect();
-          const database = client.db("find-my-pet");
-          const col = database.collection("found_posts");
 
           found_posts = await displayPosts("found_posts","","")
           lost_posts = await displayPosts("lost_posts","","")
@@ -61,9 +59,9 @@ async function searchForWords(query){
             })
           })
         console.log(posts)
-          return posts
       }finally{
           client.close()
+          return posts
       }
 }
 async function insertMongo(data, collection) {
@@ -296,10 +294,10 @@ app.get("/userposts", async (req, res) => {
   const user = req.body.email;
 });
 
-app.get("/getkeywords", async(req,res) =>{
+app.get("/getkeywords", async (req,res) =>{
     keywords = req.query;
-    const ouput = await searchForWords(keywords['keywords'])
-    res.json("output")
+    var output = await searchForWords(keywords['keywords'])
+    res.json(output)
 })
 
 app.listen(port, () => {
